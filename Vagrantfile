@@ -84,6 +84,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     if [ ! -d ~/.vim ]; then
+      ssh-keyscan -t rsa github.com
       git clone git@github.com:norman/vim-files ~/.vim
       ln -s .vim/vimrc .vimrc
       cd .vim
