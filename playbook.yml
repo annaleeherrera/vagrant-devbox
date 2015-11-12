@@ -1,0 +1,129 @@
+---
+  -
+    hosts: all
+    sudo: True
+
+    vars:
+      ruby_version: "2.2"
+      postgresql_version: "9.4"
+
+    tasks:
+      - name: update apt-cache if it is staler than 60 minutes
+        apt: update_cache=yes cache_valid_time=3600
+
+      - name: update stale packages
+        apt: upgrade=yes
+
+      - name: install base packages
+        apt: pkg={{item}} state=installed
+        with_items:
+          - ntp
+          - build-essential
+          - git-core
+          - vim
+          - vim-nox
+          - direnv
+          - tmux
+          - tmate
+
+      - name: make vim the system editor
+        alternatives: name=editor path=/usr/bin/vim link=/usr/bin/editor
+
+      - name: add nodesource repository key
+        apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
+
+      - name: add nodesource apt source
+        apt_repository: repo="deb https://deb.nodesource.com/node_4.x {{ansible_lsb.codename}} main" state="present" update_cache=yes
+
+      - name: install node
+        apt: pkg={{item}} state=latest
+        with_items:
+          - nodejs
+          - autoconf
+          - libtool
+
+      - name: add postgres repository
+        apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ {{ansible_lsb.codename}}-pgdg main' state=present
+
+      - name: add postgres repository key
+        apt_key: url=http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc state=present
+
+      - name: update apt-cache
+        apt: update_cache=yes
+
+      - name: install postgresql client
+        apt: pkg=postgresql-client-{{postgresql_version}} state=installed
+
+      - name: install postgresql server
+        apt: pkg={{item}} state=installed
+        with_items:
+          - python-psycopg2
+          - postgresql-{{postgresql_version}}
+          - postgresql-contrib-{{postgresql_version}}
+          - libpq-dev
+
+      # Not needed for Ubuntu Wily, since it ships with packages for Ruby 2.2.
+      # - name: add Brightbox PPA
+      #   apt_repository: repo=ppa:brightbox/ruby-ng state=present update_cache=yes
+
+      - name: remove ruby 2.0
+        apt: pkg={{item}} state=absent purge=yes
+        when: ruby_version != '2.0'
+        with_items:
+          - ruby2.0
+          - ruby2.0-dev
+
+      - name: remove ruby 2.1
+        apt: pkg={{item}} state=absent purge=yes
+        when: ruby_version != '2.1'
+        with_items:
+          - ruby2.1
+          - ruby2.1-dev
+
+      - name: remove ruby 2.2
+        apt: pkg={{item}} state=absent purge=yes
+        when: ruby_version != '2.2'
+        with_items:
+          - ruby2.2
+          - ruby2.2-dev
+
+      - name: install ruby
+        apt: pkg={{item}} state=installed
+        with_items:
+          - ruby{{ruby_version}}
+          - ruby{{ruby_version}}-dev
+
+      - name: copy gemrc
+        copy: src=./files/gemrc dest=/etc/gemrc backup=yes owner=root group=root mode=0644
+
+      - name: install alternatives
+        command: update-alternatives --install /usr/bin/{{item}} {{item}} /dev/null 50 creates=/etc/alternatives/{{item}}
+        with_items:
+          - ruby
+          - irb
+          - rake
+          - gem
+          - rdoc
+          - erb
+          - ri
+
+      - name: update alternatives
+        alternatives: name={{item}} path=/usr/bin/{{item}}{{ruby_version}}
+        with_items:
+          - ruby
+          - irb
+          - rake
+          - gem
+          - rdoc
+          - erb
+          - ri
+
+      - name: copy bash profile
+        copy: src=./files/bash_profile dest=/home/vagrant/.bash_profile backup=yes mode=0644 owner=vagrant group=vagrant
+
+      - name: remove annoying MOTD messages
+        file: path=/etc/update-motd.d/{{item}} state=absent
+        with_items:
+          - 98-cloudguest
+          - 51-cloudguest
+          - 10-help-text
