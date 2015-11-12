@@ -25,6 +25,8 @@
           - direnv
           - tmux
           - tmate
+          - lua5.2
+          - elixir
 
       - name: make vim the system editor
         alternatives: name=editor path=/usr/bin/vim link=/usr/bin/editor
