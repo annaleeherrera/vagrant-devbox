@@ -68,6 +68,10 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get update
   #   sudo apt-get install -y apache2
   # SHELL
+  config.vm.provider :virtualbox do |vb|
+    vb.memory = "2048"
+    vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000]
+  end
 
   config.vbguest.auto_update = true
   config.ssh.forward_agent = true
