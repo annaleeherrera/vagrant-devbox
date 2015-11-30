@@ -27,6 +27,12 @@
           - tmate
           - lua5.2
           - elixir
+          - redis-server
+          - redis-tools
+          - memcached
+          - phantomjs
+          - zip
+          - unzip
 
       - name: Make Vim the system editor
         alternatives: name=editor path=/usr/bin/vim link=/usr/bin/editor
@@ -63,6 +69,7 @@
           - postgresql-{{postgresql_version}}
           - postgresql-contrib-{{postgresql_version}}
           - libpq-dev
+          - postgis
 
       - name: Remove Ruby 2.0
         apt: pkg={{item}} state=absent purge=yes
