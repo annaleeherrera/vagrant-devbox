@@ -33,6 +33,7 @@
           - phantomjs
           - zip
           - unzip
+          - htop
 
       - name: Make Vim the system editor
         alternatives: name=editor path=/usr/bin/vim link=/usr/bin/editor
