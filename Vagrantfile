@@ -81,8 +81,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "192.168.162.62"
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  config.vm.synced_folder "/Users/norman/work", "/home/vagrant/work", type: "nfs"
-  config.bindfs.bind_folder "/home/vagrant/work", "/home/vagrant/work"
+  config.vm.synced_folder "/Users/norman/work", "/home/vagrant/work", type: "nfs", nfs_udp: false
+  # config.bindfs.bind_folder "/home/vagrant/work", "/home/vagrant/work"
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "playbook.yml"
