@@ -69,7 +69,7 @@ Vagrant.configure(2) do |config|
   #   sudo apt-get install -y apache2
   # SHELL
   config.vm.provider :virtualbox do |vb|
-    vb.memory = "4096"
+    vb.memory = "2048"
     vb.cpus = 2
     vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000]
   end
