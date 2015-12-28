@@ -85,8 +85,9 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder "/Users/norman/work", "/home/vagrant/work", type: "nfs", nfs_udp: false
   # config.bindfs.bind_folder "/home/vagrant/work", "/home/vagrant/work"
 
+  ENV["PLAYBOOK"] ||= "playbook.yml"
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "playbook.yml"
+    ansible.playbook = ENV["PLAYBOOK"]
   end
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
