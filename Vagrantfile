@@ -72,6 +72,7 @@ Vagrant.configure(2) do |config|
     vb.memory = "2048"
     vb.cpus = 2
     vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000]
+    vb.linked_clone = true if Vagrant::VERSION =~ /^1.8/
   end
 
   config.vbguest.auto_update = true
