@@ -1,0 +1,5 @@
+#!/bin/sh
+service ntp stop
+ntpdate 3.ubuntu.pool.ntp.org
+hwclock --systohc
+service ntp start

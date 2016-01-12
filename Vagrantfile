@@ -71,7 +71,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider :virtualbox do |vb|
     vb.memory = "2048"
     vb.cpus = 2
-    vb.customize ["guestproperty", "set", :id, "/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold", 10000]
+    vb.customize ["guestproperty", "set", :id, "--paravirtprovider", "kvm"]
     vb.linked_clone = true if Vagrant::VERSION =~ /^1.8/
   end
 
@@ -83,7 +83,6 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   config.vm.synced_folder "/Users/norman/work", "/home/vagrant/work", type: "nfs", nfs_udp: false
-  # config.bindfs.bind_folder "/home/vagrant/work", "/home/vagrant/work"
 
   ENV["PLAYBOOK"] ||= "playbook.yml"
   config.vm.provision "ansible" do |ansible|
