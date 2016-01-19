@@ -100,7 +100,7 @@ Vagrant.configure(2) do |config|
     fi
   SHELL
 
-  dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .ssh/config)
+  dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .ssh/config .tmux/work)
   dotfiles.each do |name|
     path = File.join(ENV['HOME'], name)
     if File.exist?(path)
