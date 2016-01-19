@@ -62,7 +62,7 @@
         apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key state=present
 
       - name: Add Nodesource apt source
-        apt_repository: repo="deb https://deb.nodesource.com/node_4.x {{ansible_lsb.codename}} main" state="present" update_cache=yes
+        apt_repository: repo="deb https://deb.nodesource.com/node_4.x {{ansible_lsb.codename}} main" state=present update_cache=yes
 
       - name: Install Node
         apt: pkg={{item}} state=latest
