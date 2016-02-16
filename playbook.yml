@@ -33,6 +33,12 @@
       - name: Update stale packages
         apt: upgrade=yes
 
+      - name: Remove unused packages
+        apt: pkg={{item}} state=absent
+        with_items:
+          - puppet
+          - chef
+
       - name: Install base packages
         apt: pkg={{item}} state=installed
         with_items:
