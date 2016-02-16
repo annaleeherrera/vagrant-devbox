@@ -6,6 +6,7 @@
     vars:
       ruby_version: "2.2"
       postgresql_version: "9.4"
+      postgis_version: "2.1.8+dfsg-4"
       hostname: "dev"
       localuser: "vagrant"
       localgroup: "vagrant"
@@ -81,7 +82,7 @@
         apt: update_cache=yes
 
       - name: Install Postgresql client
-        apt: pkg=postgresql-client-{{postgresql_version}} state=installed
+        apt: pkg=postgresql-client-{{postgresql_version}} state=present
 
       - name: Install Postgresql server
         apt: pkg={{item}} state=installed
@@ -90,12 +91,19 @@
           - postgresql-{{postgresql_version}}
           - postgresql-contrib-{{postgresql_version}}
           - libpq-dev
-          - postgis
 
       - name: Add Postgres user
         sudo: yes
         sudo_user: postgres
         postgresql_user: name={{localuser}} role_attr_flags=SUPERUSER state=present
+
+      - name: Install Postgis
+        apt: pkg="{{item}}" state=installed force=yes
+        with_items:
+          - postgis={{postgis_version}}
+          - postgis-doc={{postgis_version}}
+          - postgresql-{{postgresql_version}}-postgis-2.1={{postgis_version}}
+          - postgresql-{{postgresql_version}}-postgis-scripts={{postgis_version}}
 
       - name: Install Ruby
         apt: pkg={{item}} state=installed
