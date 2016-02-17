@@ -6,7 +6,7 @@
     vars:
       ruby_version: "2.2"
       postgresql_version: "9.4"
-      postgis_version: "2.1.8+dfsg-4"
+      postgis_version: "2.1"
       hostname: "dev"
       localuser: "vagrant"
       localgroup: "vagrant"
@@ -106,10 +106,22 @@
       - name: Install Postgis
         apt: pkg="{{item}}" state=installed force=yes
         with_items:
-          - postgis={{postgis_version}}
-          - postgis-doc={{postgis_version}}
-          - postgresql-{{postgresql_version}}-postgis-2.1={{postgis_version}}
-          - postgresql-{{postgresql_version}}-postgis-scripts={{postgis_version}}
+          - postgis={{postgis_version}}*
+          - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}={{postgis_version}}*
+          - postgresql-{{postgresql_version}}-postgis-scripts={{postgis_version}}*
+
+      - name: Check whether Postgis is already held
+        command: apt-mark showhold postgis
+        register: postgis_is_held
+        ignore_errors: True
+
+      - name: Hold Postgis packages to set version
+        command: apt-mark hold {{item}}
+        when: postgis_is_held|failed
+        with_items:
+          - postgis
+          - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}
+          - postgresql-{{postgresql_version}}-postgis-scripts
 
       - name: Install Ruby
         apt: pkg={{item}} state=installed
