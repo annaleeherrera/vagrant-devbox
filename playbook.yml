@@ -124,26 +124,26 @@
           - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}
           - postgresql-{{postgresql_version}}-postgis-scripts
 
-      - name: Remove Ruby 2.0
-        apt: pkg={{item}} state=absent purge=yes
-        when: ruby_version != '2.0'
-        with_items:
-          - ruby2.0
-          - ruby2.0-dev
-
-      - name: Remove Ruby 2.1
-        apt: pkg={{item}} state=absent purge=yes
-        when: ruby_version != '2.1'
-        with_items:
-          - ruby2.1
-          - ruby2.1-dev
-
-      - name: Remove Ruby 2.2
-        apt: pkg={{item}} state=absent purge=yes
-        when: ruby_version != '2.2'
-        with_items:
-          - ruby2.2
-          - ruby2.2-dev
+      # - name: Remove Ruby 2.0
+      #   apt: pkg={{item}} state=absent purge=yes
+      #   when: ruby_version != '2.0'
+      #   with_items:
+      #     - ruby2.0
+      #     - ruby2.0-dev
+      #
+      # - name: Remove Ruby 2.1
+      #   apt: pkg={{item}} state=absent purge=yes
+      #   when: ruby_version != '2.1'
+      #   with_items:
+      #     - ruby2.1
+      #     - ruby2.1-dev
+      #
+      # - name: Remove Ruby 2.2
+      #   apt: pkg={{item}} state=absent purge=yes
+      #   when: ruby_version != '2.2'
+      #   with_items:
+      #     - ruby2.2
+      #     - ruby2.2-dev
 
       - name: add Brightbox PPA
         apt_repository: repo=ppa:brightbox/ruby-ng state=present update_cache=yes
