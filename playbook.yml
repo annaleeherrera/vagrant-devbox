@@ -62,6 +62,7 @@
           - openvpn
           - ack-grep
           - libcurl4-openssl-dev
+          - imagemagick
 
       - name: Make Vim the system editor
         alternatives: name=editor path=/usr/bin/vim link=/usr/bin/editor
