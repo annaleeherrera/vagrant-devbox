@@ -79,6 +79,7 @@ Vagrant.configure(2) do |config|
   config.ssh.forward_agent = true
   config.ssh.insert_key = false
   config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 8888, host: 8888
   config.vm.network "private_network", ip: "192.168.162.62"
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
