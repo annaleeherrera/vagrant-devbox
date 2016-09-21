@@ -159,6 +159,11 @@
       - name: Copy gemrc
         copy: src=./files/gemrc dest=/etc/gemrc backup=yes owner=root group=root mode=0644
 
+      - name: Remove Bundler apt package
+        apt: pkg={{item}} state=absent
+        with_items:
+          - bundler
+
       - name: Add Heroku apt source
         apt_repository: repo="deb http://toolbelt.heroku.com/ubuntu ./" state=present update_cache=yes
 
