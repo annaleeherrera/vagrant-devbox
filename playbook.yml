@@ -17,6 +17,12 @@
         command: /etc/cron.hourly/ntpdate
 
     tasks:
+      - name: Remove unused packages
+        apt: pkg={{item}} state=absent
+        with_items:
+          - puppet
+          - chef
+
       - name: Update hostname
         hostname: name={{hostname}}
 
@@ -29,12 +35,6 @@
       - name: Add cron job to sync time
         copy: src=./files/ntpdate dest=/etc/cron.hourly/ntpdate mode=0755 owner=root group=root
         notify: sync time
-
-      - name: Remove unused packages
-        apt: pkg={{item}} state=absent
-        with_items:
-          - puppet
-          - chef
 
       - name: Update stale packages
         apt: upgrade=yes
