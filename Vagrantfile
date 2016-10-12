@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "https://cloud-images.ubuntu.com/vagrant/wily/current/wily-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.box = "https://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd64-vagrant.box"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -77,13 +77,15 @@ Vagrant.configure(2) do |config|
 
   config.vbguest.auto_update = true
   config.ssh.forward_agent = true
-  config.ssh.insert_key = false
+  config.ssh.insert_key = true
   config.vm.network "forwarded_port", guest: 3000, host: 3000
   config.vm.network "forwarded_port", guest: 8888, host: 8888
   config.vm.network "private_network", ip: "192.168.162.62"
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
-  config.vm.synced_folder "/Users/norman/work", "/home/vagrant/work", type: "nfs", nfs_udp: false
+  require "yaml"
+  localuser = YAML.load(File.read("playbook.yml")).first["vars"]["localuser"]
+  config.vm.synced_folder "/Users/norman/work", "/home/#{localuser}/work", type: "nfs", nfs_udp: false
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = ENV.fetch("PLAYBOOK", "playbook.yml")

@@ -6,10 +6,10 @@
     vars:
       ruby_version: "2.3"
       postgresql_version: "9.4"
-      postgis_version: "2.1"
+      postgis_version: "2.3"
       hostname: "dev"
-      localuser: "vagrant"
-      localgroup: "vagrant"
+      localuser: "ubuntu"
+      localgroup: "users"
       localshell: "/bin/bash"
 
     handlers:
@@ -35,6 +35,9 @@
       - name: Add cron job to sync time
         copy: src=./files/ntpdate dest=/etc/cron.hourly/ntpdate mode=0755 owner=root group=root
         notify: sync time
+        
+      - name: Install Aptitude
+        apt: pkg=aptitude state=installed
 
       - name: Update stale packages
         apt: upgrade=yes
@@ -109,22 +112,21 @@
       - name: Install Postgis
         apt: pkg="{{item}}" state=installed force=yes
         with_items:
-          - postgis={{postgis_version}}*
-          - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}={{postgis_version}}*
-          - postgresql-{{postgresql_version}}-postgis-scripts={{postgis_version}}*
-
-      - name: Check whether Postgis is already held
-        command: apt-mark showhold postgis
-        register: postgis_is_held
-        ignore_errors: True
-
-      - name: Hold Postgis packages to set version
-        command: apt-mark hold {{item}}
-        when: postgis_is_held|failed
-        with_items:
           - postgis
           - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}
-          - postgresql-{{postgresql_version}}-postgis-scripts
+
+      # - name: Check whether Postgis is already held
+      #   command: apt-mark showhold postgis
+      #   register: postgis_is_held
+      #   ignore_errors: True
+      #
+      # - name: Hold Postgis packages to set version
+      #   command: apt-mark hold {{item}}
+      #   when: postgis_is_held|failed
+      #   with_items:
+      #     - postgis
+      #     - postgresql-{{postgresql_version}}-postgis-{{postgis_version}}
+      #     - postgresql-{{postgresql_version}}-postgis-scripts
 
       # - name: Remove Ruby 2.0
       #   apt: pkg={{item}} state=absent purge=yes
