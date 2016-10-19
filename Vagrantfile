@@ -84,25 +84,17 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".", "/vagrant", disabled: true
 
   require "yaml"
+  synced_folder = ENV.fetch("VAGRANT_SYNCED_FOLDER", "/Users/#{ENV['USER']}/work")
   localuser = YAML.load(File.read("playbook.yml")).first["vars"]["localuser"]
-  config.vm.synced_folder "/Users/norman/work", "/home/#{localuser}/work", type: "nfs", nfs_udp: false
+
+  config.vm.synced_folder , synced_folder, type: "nfs", nfs_udp: false
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = ENV.fetch("PLAYBOOK", "playbook.yml")
   end
 
-  config.vm.provision "shell", privileged: false, inline: <<-SHELL
-    if [ ! -d ~/.vim ]; then
-      ssh-keyscan -t rsa,dsa github.com >> ~/.ssh/known_hosts
-      git clone git@github.com:norman/vim-files ~/.vim
-      ln -s .vim/vimrc .vimrc
-      cd .vim
-      git submodule sync
-      git submodule update --init --recursive
-    fi
-  SHELL
-
-  dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .ssh/config .tmux/work)
+  default_dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .ssh/config .tmux/work)
+  dotfiles = ENV.fetch('VAGRANT_DOTFILES', default_dotfiles)
   dotfiles.each do |name|
     path = File.join(ENV['HOME'], name)
     if File.exist?(path)
