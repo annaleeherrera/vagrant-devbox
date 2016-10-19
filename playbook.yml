@@ -200,12 +200,12 @@
 
       - name: "Add cert for openvpn"
         copy: src={{item}} dest=/etc/ssl/certs/estately.crt group=root owner=root mode=0400
-        with_file_glob:
+        with_fileglob:
           - 'vpn/[!ca]*.crt'
 
       - name: "Add key for openvpn"
         copy: src={{item}} dest=/etc/ssl/private/estately.key group=root owner=root mode=0400
-        with_file_glob:
+        with_fileglob:
           - vpn/*.key
 
       - name: "Add CA for openvpn"
