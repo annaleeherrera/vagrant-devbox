@@ -209,7 +209,7 @@
           - vpn/*.key
 
       - name: "Add CA for openvpn"
-        copy: src=ca.crt dest=/etc/ssl/certs/estately-ca.crt group=root owner=root mode=0400
+        copy: src=vpn/ca.crt dest=/etc/ssl/certs/estately-ca.crt group=root owner=root mode=0400
 
       - name: "Add config for openvpn"
         notify:
