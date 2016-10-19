@@ -1,0 +1,2 @@
+Unzip your VPN configuration files here, they will be used by Ansible to set up
+OpenVPN and ignored by Git.
