@@ -87,7 +87,8 @@ Vagrant.configure(2) do |config|
   synced_folder = ENV.fetch("VAGRANT_SYNCED_FOLDER", "/Users/#{ENV['USER']}/work")
   localuser = YAML.load(File.read("playbook.yml")).first["vars"]["localuser"]
 
-  config.vm.synced_folder , synced_folder, type: "nfs", nfs_udp: false
+  config.vm.synced_folder synced_folder, "/home/#{localuser}/work", type: "nfs", nfs_udp: false
+
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = ENV.fetch("PLAYBOOK", "playbook.yml")
