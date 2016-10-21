@@ -5,6 +5,8 @@ Estately's applications. It uses Vagrant and Ansible to build an Ubuntu virtual
 machine with everything you need to run our Ruby and JavaScript code in
 development mode.
 
+It sets up a shared directory so - if you want - you can continue to edit source code locally how you do now, but run the code on the virtual machine.
+
 ## Instructions
 
 This is a work in progress.
@@ -28,7 +30,7 @@ On Ubuntu the following might work (please verify and fix this doc!)
 
 ### Install Ansible
 
-Use `brew` or `apt-get` to install Ansible.
+Use `brew` or `apt-get` to install Ansible. You must install Ansible 2.1 or higher.
 
 ### Bring up Vagrant VM
 
@@ -85,12 +87,6 @@ If it's working properly you should see a message like:
     Hi <user name>! You've successfully authenticated, but GitHub does not provide shell access.
     Connection to github.com closed.
 
-### Install and run Bundler
-
-		cd ~/work/estately/estately
-		gem install bundler
-		bundle
-
 ### Initialize the database
 
 		cd ~/work/estately/estately
@@ -108,4 +104,9 @@ Use the web server webrick rather than the default (Unicorn) because in this
 environment, Unicorn tends to lock up after a few changes to asset files.
 
 ### Customizing the environment
+
+COMING SOON
+
 ### Known Issues
+
+COMING SOON

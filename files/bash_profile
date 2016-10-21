@@ -8,42 +8,10 @@ export HISTCONTROL=erasedups
 export HISTSIZE=10000
 shopt -s histappend
 
-export PS1="‣ "
-export EDITOR=vim
-export PAGER="less -X"
-
-# Don't use the Debian gem setup, it makes Spring emit warnings that are
-# impossible to silence. Instead install gems in a user directory.
-export DEBIAN_DISABLE_RUBYGEMS_INTEGRATION=true
-export GEM_HOME=~/.gems
-export GEM_PATH=~/.gems
-
-# Add gem bin path to PATH
-export PATH=$PATH:~/.gems/bin
-
-# Set up Direnv; this allow us to have ENV vars on a per-directory basis. At
-# present this is used to add the Spring binstubs to the shell's path when
-# inside a Rails application directory.
-eval "$(direnv hook bash)"
-
-# Needed for XVFB
-export DISPLAY=:99
-
-# Needed for PhantomJS to work on Ubuntu 16.04 (October 2016)
+# Needed for running PhantomJS on Ubuntu 16.04
 export QT_QPA_PLATFORM=offscreen
+export GEM_HOME=~/.gem
+export PATH=$PATH:~/.gem/ruby/2.3.0/bin
 
-alias irb='irb --simple-prompt --readline'
-alias gs='git status'
-alias gl='git log'
-alias gc='git commit'
-alias gca='git commit --amend'
-alias ga='git add'
-alias gap='git add -p'
-alias gp='git pull'
-alias gpr='git pull --rebase'
-alias gb='git branch'
-alias grmall='git diff --name-only --diff-filter=D -z | xargs -0 git rm --cached'
-alias tmux="tmux -2"
-alias bake='bundle exec rake'
 
-export SSH_AUTH_SOCK=$(ls /tmp/ssh*/agent*)
+

@@ -1,7 +1,9 @@
 ---
   -
     hosts: all
-    sudo: True
+    become: yes
+    become_user: root
+    become_method: sudo
 
     vars:
       ruby_version: "2.3"
@@ -20,7 +22,6 @@
         service: name=postgresql state=restarted
 
       - name: reload systemd
-        sudo: yes
         command: systemctl daemon-reload
 
       - name: restart openvpn
@@ -38,6 +39,9 @@
 
       - name: Create local user and group
         user: name={{localuser}} group={{localgroup}} groups="users,sudo" shell={{localshell}} state="present"
+
+      - name: Copy bash profile
+        copy: src=./files/bash_profile dest=/home/{{localuser}}/.bash_profile backup=yes mode=0644 owner={{localuser}} group={{localgroup}}
 
       - name: Update apt-cache if it is staler than 60 minutes
         apt: update_cache=yes cache_valid_time=3600
@@ -115,8 +119,8 @@
           - libpq-dev
 
       - name: Add Postgres user
-        sudo: yes
-        sudo_user: postgres
+        become: yes
+        become_user: postgres
         postgresql_user: name={{localuser}} role_attr_flags=SUPERUSER state=present
 
       - name: Install Postgis
@@ -137,10 +141,20 @@
       - name: Copy gemrc
         copy: src=./files/gemrc dest=/etc/gemrc backup=yes owner=root group=root mode=0644
 
+      - name: Update to latest Rubygems
+        command: "gem update --system"
+        environment:
+          DEBIAN_DISABLE_RUBYGEMS_INTEGRATION: "true"
+
       - name: Remove Bundler apt package
-        apt: pkg={{item}} state=absent
-        with_items:
-          - bundler
+        apt: pkg=bundle state=absent
+
+      - name: Install Bundler via Rubygems
+        gem: name=bundler
+        become: yes
+        become_user: "{{localuser}}"
+        environment:
+          GEM_HOME: "~/.gem"
 
       - name: Add Heroku apt source
         apt_repository: repo="deb http://toolbelt.heroku.com/ubuntu ./" state=present update_cache=yes
@@ -151,9 +165,6 @@
       - name: Install Heroku toolbelt
         apt: pkg=heroku-toolbelt state=present force=yes
 
-      - name: Copy bash profile
-        copy: src=./files/bash_profile dest=/home/{{localuser}}/.bash_profile backup=yes mode=0644 owner={{localuser}} group={{localgroup}}
-
       - name: Remove annoying MOTD messages
         file: path=/etc/update-motd.d/{{item}} state=absent
         with_items:
@@ -162,8 +173,8 @@
           - 10-help-text
 
       - name: Add Estately Postgres user
-        sudo: yes
-        sudo_user: postgres
+        become: yes
+        become_user: postgres
         postgresql_user: name=shackserv password=password role_attr_flags=SUPERUSER state=present
 
       - name: "Add staging server to /etc/hosts"
@@ -196,7 +207,6 @@
           
       - name: "Set known hosts file ownership"
         file: path=/home/{{localuser}}/.ssh/known_hosts owner={{localuser}} group={{localgroup}} mode=0600
-
 
       - name: "Add cert for openvpn"
         copy: src={{item}} dest=/etc/ssl/certs/estately.crt group=root owner=root mode=0400

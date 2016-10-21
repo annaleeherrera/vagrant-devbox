@@ -94,8 +94,10 @@ Vagrant.configure(2) do |config|
     ansible.playbook = ENV.fetch("PLAYBOOK", "playbook.yml")
   end
 
-  default_dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .ssh/config .tmux/work)
-  dotfiles = ENV.fetch('VAGRANT_DOTFILES', default_dotfiles)
+  dotfiles = %w(
+    .gitconfig .gitignore .irbrc .tmux.conf .screenrc
+    .ssh/config .tmux/work .vimrc .vim
+  )
   dotfiles.each do |name|
     path = File.join(ENV['HOME'], name)
     if File.exist?(path)
