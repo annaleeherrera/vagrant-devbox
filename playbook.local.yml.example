@@ -1,0 +1,19 @@
+---
+  -
+    hosts: all
+    become: yes
+    become_user: root
+    become_method: sudo
+
+    vars:
+      localuser: "ubuntu"
+      localgroup: "users"
+      localshell: "/bin/bash"
+
+    tasks:
+      - name: "Add some lines to .bash_profile"
+        lineinfile: dest="/home/{{localuser}}/.bash_profile" line="{{item}}"
+        with_items:
+          - "alias irb='irb --simple-prompt --readline'"
+          - "alias tmux="tmux -2""
+          - "alias bake='bundle exec rake'"
