@@ -67,8 +67,6 @@
           - direnv
           - tmux
           - tmate
-          - lua5.2
-          # - elixir
           - redis-server
           - redis-tools
           - memcached
