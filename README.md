@@ -105,8 +105,8 @@ environment, Unicorn tends to lock up after a few changes to asset files.
 
 ### Customizing the environment
 
-COMING SOON
+You can copy `playbook.local.yml.example` to `playbook.local.yml` and add your own tweaks to your setup.
 
 ### Known Issues
 
-COMING SOON
+List them here!
