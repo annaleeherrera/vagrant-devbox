@@ -5,7 +5,8 @@ Estately's applications. It uses Vagrant and Ansible to build an Ubuntu virtual
 machine with everything you need to run our Ruby and JavaScript code in
 development mode.
 
-It sets up a shared directory so - if you want - you can continue to edit source code locally how you do now, but run the code on the virtual machine.
+It sets up a shared directory so - if you want - you can continue to edit
+source code locally how you do now, but run the code on the virtual machine.
 
 ## Instructions
 
