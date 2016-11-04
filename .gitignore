@@ -3,3 +3,4 @@ files/vpn/*.conf
 files/vpn/*.key
 files/vpn/*.crt
 files/vpn/*.ovpn
+playbook.local.yml

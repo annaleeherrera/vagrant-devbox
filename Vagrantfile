@@ -91,13 +91,16 @@ Vagrant.configure(2) do |config|
 
 
   config.vm.provision "ansible" do |ansible|
-    ansible.playbook = ENV.fetch("PLAYBOOK", "playbook.yml")
+    ansible.playbook = "playbook.yml"
   end
 
-  dotfiles = %w(
-    .gitconfig .gitignore .irbrc .tmux.conf .screenrc
-    .ssh/config .tmux/work .vimrc .vim
-  )
+  if File.exists?("playbook.local.yml")
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "playbook.local.yml"
+    end
+  end
+
+  dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .screenrc .ssh/config .tmux/work .vimrc .vim)
   dotfiles.each do |name|
     path = File.join(ENV['HOME'], name)
     if File.exist?(path)
