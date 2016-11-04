@@ -41,7 +41,7 @@
         user: name={{localuser}} group={{localgroup}} groups="users,sudo" shell={{localshell}} state="present"
 
       - name: Copy bash profile
-        copy: src=./files/bash_profile dest=/home/{{localuser}}/.bash_profile backup=yes mode=0644 owner={{localuser}} group={{localgroup}}
+        copy: src=./files/bash_profile dest=/home/{{localuser}}/.bash_profile force=no mode=0644 owner={{localuser}} group={{localgroup}}
 
       - name: Update apt-cache if it is staler than 60 minutes
         apt: update_cache=yes cache_valid_time=3600
