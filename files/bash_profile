@@ -11,7 +11,7 @@ shopt -s histappend
 # Needed for running PhantomJS on Ubuntu 16.04
 export QT_QPA_PLATFORM=offscreen
 export GEM_HOME=~/.gem
-export PATH=$PATH:~/.gem/ruby/2.3.0/bin
+export PATH=$PATH:~/.gem/ruby/2.3.0/bin:~/.gem/bin
 
 
 
