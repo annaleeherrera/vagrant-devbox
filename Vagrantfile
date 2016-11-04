@@ -73,6 +73,14 @@ Vagrant.configure(2) do |config|
     vb.cpus = 2
     vb.customize ["guestproperty", "set", :id, "--paravirtprovider", "kvm"]
     vb.linked_clone = true if Vagrant::VERSION =~ /^1.8/
+    # Sometimes after a crash, the VM does not boot because the Linux bootloader
+    # is waiting for keyboard input. In this case, you can temporarily uncomment
+    # this line to get a monitor for the VM see what's going on.
+    #
+    # You can also try running the "unstick vagrant" shell script, which sends
+    # an "enter" to the VM, which will usually make it exit the bootloader menu
+    # and continue booting Linux.
+    # vb.gui = true
   end
 
   config.vbguest.auto_update = true
@@ -98,6 +106,9 @@ Vagrant.configure(2) do |config|
     config.vm.provision "ansible" do |ansible|
       ansible.playbook = "playbook.local.yml"
     end
+  end
+
+  config.vm.provider "virtualbox" do |vb|
   end
 
   dotfiles = %w(.gitconfig .gitignore .irbrc .tmux.conf .screenrc .ssh/config .vimrc .vim)
