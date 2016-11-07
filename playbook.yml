@@ -251,3 +251,29 @@
 
       - name: "Set known hosts file ownership"
         file: path=/home/{{localuser}}/.ssh/known_hosts owner={{localuser}} group={{localgroup}} mode=0600
+
+      - stat: path=/home/{{localuser}}/.tmux.conf
+        register: tmux_conf
+
+      - name: "Set up symlink for SSH_AUTH_SOCK"
+        when: tmux_conf.stat.exists == True
+        copy:
+          dest: /home/{{localuser}}/.ssh/rc
+          owner: "{{localuser}}"
+          group: "{{localgroup}}"
+          mode: 0700
+          content: |
+            #!/bin/bash
+
+            # Fix SSH auth socket location so agent forwarding always works 
+            # with tmux even after a session reattach.
+            if test "$SSH_AUTH_SOCK" ; then
+              ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+            fi
+
+      - name: Fix tmux SSH reattach issue
+        lineinfile: dest="/home/{{localuser}}/.tmux.conf" line="{{item}}"
+        when: tmux_conf.stat.exists == True
+        with_items:
+          - "setenv -g SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock"
+          - "set -g update-environment -r"
